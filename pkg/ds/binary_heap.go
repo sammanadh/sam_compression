@@ -13,26 +13,39 @@ func NewNode[T any](val T, weight int) *Node[T] {
 }
 
 type BinaryMaxHeap[T any] struct {
-	heap []*Node[T]
+	Heap []*Node[T]
 }
 
 func NewBinaryMaxHeap[T any]() *BinaryMaxHeap[T] {
 	return &BinaryMaxHeap[T]{[]*Node[T]{}}
 }
 
-func (b *BinaryMaxHeap[T]) insert(val T) {
-	b.heap = append(b.heap, &Node[T]{val, len(b.heap), nil, nil})
+func (b *BinaryMaxHeap[T]) Insert(val T, weight int) {
+	b.Heap = append(b.Heap, &Node[T]{val, weight, nil, nil})
 	b.bubbleUp()
 }
 
 func (b *BinaryMaxHeap[T]) remove() T {
-	i := b.heap[0].Value
+	i := b.Heap[0].Value
 	b.bubbleDown()
 	return i
 }
 
+// func (b *BinaryMaxHeap[T]) CreateHuffmanTree() *Node[T] {
+// 	for len(b.Heap) > 1 {
+// 		l := len(b.Heap) - 1
+// 		combinedWeight := b.Heap[l].Weight + b.Heap[l-1].Weight
+// 		var zero T // zero value for type "T"
+// 		newSmallestNode := &Node[T]{Value: zero, Weight: combinedWeight, Left: b.Heap[l], Right: b.Heap[l-1]}
+// 		b.Heap = b.Heap[:l]
+// 		b.Heap[l-1] = newSmallestNode
+// 		b.bubbleUp()
+// 	}
+// 	return b.Heap[0]
+// }
+
 func (b *BinaryMaxHeap[T]) bubbleUp() {
-	h := b.heap
+	h := b.Heap
 	i := len(h)
 	for i > 0 && h[i-1].Weight > h[i].Weight {
 		parentIdx := (i - 1) / 2
@@ -44,7 +57,7 @@ func (b *BinaryMaxHeap[T]) bubbleUp() {
 }
 
 func (b *BinaryMaxHeap[T]) bubbleDown() {
-	h := b.heap
+	h := b.Heap
 	lstIdx := len(h) - 1
 	lowest := h[lstIdx]
 	h = h[:lstIdx]
