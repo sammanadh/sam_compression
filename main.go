@@ -59,10 +59,6 @@ func main() {
 		}
 	}
 
-	for i, char := range chars {
-		fmt.Printf("%s %d\n", string(char), counts[i])
-	}
-
 	// var maxHeap *ds.BinaryMaxHeap[byte] = ds.NewBinaryMaxHeap[byte]()
 	var orderedNodes []*ds.Node[byte] = []*ds.Node[byte]{}
 	for i, count := range counts {
@@ -71,7 +67,12 @@ func main() {
 	}
 
 	hoffmanTree := createHuffmanTree(orderedNodes)
-	printBinaryTree(hoffmanTree)
+	// printBinaryTree(hoffmanTree)
+
+	prefixCodeTable := generatePrefixCodeTable(hoffmanTree)
+	for k, v := range prefixCodeTable {
+		fmt.Println(string(k), v)
+	}
 }
 
 func swap[T any](s []T, idx1 int, idx2 int) {
@@ -102,6 +103,24 @@ func createHuffmanTree[T any](nodes []*ds.Node[T]) *ds.Node[T] {
 		}
 	}
 	return nodesClone[0]
+}
+
+func generatePrefixCodeTable(ht *ds.Node[byte]) map[byte]string {
+	preffixCodes := make(map[byte]string)
+	var traverseTree func(*ds.Node[byte], string)
+	var zero byte // zero value for type "byte"
+	traverseTree = func(currNode *ds.Node[byte], currCode string) {
+		if currNode == nil {
+			return
+		} else if currNode.Value != zero {
+			preffixCodes[currNode.Value] = currCode
+		} else {
+			traverseTree(currNode.Left, currCode+"0")
+			traverseTree(currNode.Right, currCode+"1")
+		}
+	}
+	traverseTree(ht, "")
+	return preffixCodes
 }
 
 func printBinaryTree[T any](root *ds.Node[T]) {
